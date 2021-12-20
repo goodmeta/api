@@ -1,21 +1,20 @@
 import dotenv from 'dotenv'
-import { VelvetApplication } from './application'
-import { ApplicationConfig, ExpressServer } from './server'
+import { ApplicationConfig, VelvetApplication } from './application'
 
 dotenv.config()
 
-export { ApplicationConfig, ExpressServer, VelvetApplication }
+export * from './application'
 
 export async function main(options: ApplicationConfig = {}) {
-  const server = new ExpressServer(options)
-  await server.boot()
-  await server.start()
+  const app = new VelvetApplication(options)
+  await app.boot()
+  await app.start()
 
-  const url = server.lbApp.restServer.url
+  const url = app.restServer.url
   console.log(`Server is running at ${url}`)
   console.log(`Try ${url}/ping`)
 
-  return server
+  return app
 }
 
 if (require.main === module) {

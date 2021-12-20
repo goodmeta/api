@@ -5,7 +5,7 @@ import {
   FilterExcludingWhere,
   repository,
   Where,
-} from '@loopback/repository';
+} from '@loopback/repository'
 import {
   post,
   param,
@@ -16,20 +16,20 @@ import {
   del,
   requestBody,
   response,
-} from '@loopback/rest';
-import {Influencer} from '../models';
-import {InfluencerRepository} from '../repositories';
+} from '@loopback/rest'
+import { Influencer } from '../models'
+import { InfluencerRepository } from '../repositories'
 
 export class InfluencerController {
   constructor(
     @repository(InfluencerRepository)
-    public influencerRepository : InfluencerRepository,
+    public influencerRepository: InfluencerRepository,
   ) {}
 
   @post('/influencers')
   @response(200, {
     description: 'Influencer model instance',
-    content: {'application/json': {schema: getModelSchemaRef(Influencer)}},
+    content: { 'application/json': { schema: getModelSchemaRef(Influencer) } },
   })
   async create(
     @requestBody({
@@ -44,18 +44,18 @@ export class InfluencerController {
     })
     influencer: Omit<Influencer, 'id'>,
   ): Promise<Influencer> {
-    return this.influencerRepository.create(influencer);
+    return this.influencerRepository.create(influencer)
   }
 
   @get('/influencers/count')
   @response(200, {
     description: 'Influencer model count',
-    content: {'application/json': {schema: CountSchema}},
+    content: { 'application/json': { schema: CountSchema } },
   })
   async count(
     @param.where(Influencer) where?: Where<Influencer>,
   ): Promise<Count> {
-    return this.influencerRepository.count(where);
+    return this.influencerRepository.count(where)
   }
 
   @get('/influencers')
@@ -65,7 +65,7 @@ export class InfluencerController {
       'application/json': {
         schema: {
           type: 'array',
-          items: getModelSchemaRef(Influencer, {includeRelations: true}),
+          items: getModelSchemaRef(Influencer, { includeRelations: true }),
         },
       },
     },
@@ -73,26 +73,26 @@ export class InfluencerController {
   async find(
     @param.filter(Influencer) filter?: Filter<Influencer>,
   ): Promise<Influencer[]> {
-    return this.influencerRepository.find(filter);
+    return this.influencerRepository.find(filter)
   }
 
   @patch('/influencers')
   @response(200, {
     description: 'Influencer PATCH success count',
-    content: {'application/json': {schema: CountSchema}},
+    content: { 'application/json': { schema: CountSchema } },
   })
   async updateAll(
     @requestBody({
       content: {
         'application/json': {
-          schema: getModelSchemaRef(Influencer, {partial: true}),
+          schema: getModelSchemaRef(Influencer, { partial: true }),
         },
       },
     })
     influencer: Influencer,
     @param.where(Influencer) where?: Where<Influencer>,
   ): Promise<Count> {
-    return this.influencerRepository.updateAll(influencer, where);
+    return this.influencerRepository.updateAll(influencer, where)
   }
 
   @get('/influencers/{id}')
@@ -100,15 +100,16 @@ export class InfluencerController {
     description: 'Influencer model instance',
     content: {
       'application/json': {
-        schema: getModelSchemaRef(Influencer, {includeRelations: true}),
+        schema: getModelSchemaRef(Influencer, { includeRelations: true }),
       },
     },
   })
   async findById(
     @param.path.string('id') id: string,
-    @param.filter(Influencer, {exclude: 'where'}) filter?: FilterExcludingWhere<Influencer>
+    @param.filter(Influencer, { exclude: 'where' })
+    filter?: FilterExcludingWhere<Influencer>,
   ): Promise<Influencer> {
-    return this.influencerRepository.findById(id, filter);
+    return this.influencerRepository.findById(id, filter)
   }
 
   @patch('/influencers/{id}')
@@ -120,13 +121,13 @@ export class InfluencerController {
     @requestBody({
       content: {
         'application/json': {
-          schema: getModelSchemaRef(Influencer, {partial: true}),
+          schema: getModelSchemaRef(Influencer, { partial: true }),
         },
       },
     })
     influencer: Influencer,
   ): Promise<void> {
-    await this.influencerRepository.updateById(id, influencer);
+    await this.influencerRepository.updateById(id, influencer)
   }
 
   @put('/influencers/{id}')
@@ -137,7 +138,7 @@ export class InfluencerController {
     @param.path.string('id') id: string,
     @requestBody() influencer: Influencer,
   ): Promise<void> {
-    await this.influencerRepository.replaceById(id, influencer);
+    await this.influencerRepository.replaceById(id, influencer)
   }
 
   @del('/influencers/{id}')
@@ -145,6 +146,6 @@ export class InfluencerController {
     description: 'Influencer DELETE success',
   })
   async deleteById(@param.path.string('id') id: string): Promise<void> {
-    await this.influencerRepository.deleteById(id);
+    await this.influencerRepository.deleteById(id)
   }
 }

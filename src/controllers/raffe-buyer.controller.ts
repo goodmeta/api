@@ -5,7 +5,7 @@ import {
   FilterExcludingWhere,
   repository,
   Where,
-} from '@loopback/repository';
+} from '@loopback/repository'
 import {
   post,
   param,
@@ -16,20 +16,20 @@ import {
   del,
   requestBody,
   response,
-} from '@loopback/rest';
-import {RaffleBuyer} from '../models';
-import {RaffleBuyerRepository} from '../repositories';
+} from '@loopback/rest'
+import { RaffleBuyer } from '../models'
+import { RaffleBuyerRepository } from '../repositories'
 
 export class RaffeBuyerController {
   constructor(
     @repository(RaffleBuyerRepository)
-    public raffleBuyerRepository : RaffleBuyerRepository,
+    public raffleBuyerRepository: RaffleBuyerRepository,
   ) {}
 
   @post('/raffle-buyers')
   @response(200, {
     description: 'RaffleBuyer model instance',
-    content: {'application/json': {schema: getModelSchemaRef(RaffleBuyer)}},
+    content: { 'application/json': { schema: getModelSchemaRef(RaffleBuyer) } },
   })
   async create(
     @requestBody({
@@ -44,18 +44,18 @@ export class RaffeBuyerController {
     })
     raffleBuyer: Omit<RaffleBuyer, 'id'>,
   ): Promise<RaffleBuyer> {
-    return this.raffleBuyerRepository.create(raffleBuyer);
+    return this.raffleBuyerRepository.create(raffleBuyer)
   }
 
   @get('/raffle-buyers/count')
   @response(200, {
     description: 'RaffleBuyer model count',
-    content: {'application/json': {schema: CountSchema}},
+    content: { 'application/json': { schema: CountSchema } },
   })
   async count(
     @param.where(RaffleBuyer) where?: Where<RaffleBuyer>,
   ): Promise<Count> {
-    return this.raffleBuyerRepository.count(where);
+    return this.raffleBuyerRepository.count(where)
   }
 
   @get('/raffle-buyers')
@@ -65,7 +65,7 @@ export class RaffeBuyerController {
       'application/json': {
         schema: {
           type: 'array',
-          items: getModelSchemaRef(RaffleBuyer, {includeRelations: true}),
+          items: getModelSchemaRef(RaffleBuyer, { includeRelations: true }),
         },
       },
     },
@@ -73,26 +73,26 @@ export class RaffeBuyerController {
   async find(
     @param.filter(RaffleBuyer) filter?: Filter<RaffleBuyer>,
   ): Promise<RaffleBuyer[]> {
-    return this.raffleBuyerRepository.find(filter);
+    return this.raffleBuyerRepository.find(filter)
   }
 
   @patch('/raffle-buyers')
   @response(200, {
     description: 'RaffleBuyer PATCH success count',
-    content: {'application/json': {schema: CountSchema}},
+    content: { 'application/json': { schema: CountSchema } },
   })
   async updateAll(
     @requestBody({
       content: {
         'application/json': {
-          schema: getModelSchemaRef(RaffleBuyer, {partial: true}),
+          schema: getModelSchemaRef(RaffleBuyer, { partial: true }),
         },
       },
     })
     raffleBuyer: RaffleBuyer,
     @param.where(RaffleBuyer) where?: Where<RaffleBuyer>,
   ): Promise<Count> {
-    return this.raffleBuyerRepository.updateAll(raffleBuyer, where);
+    return this.raffleBuyerRepository.updateAll(raffleBuyer, where)
   }
 
   @get('/raffle-buyers/{id}')
@@ -100,15 +100,16 @@ export class RaffeBuyerController {
     description: 'RaffleBuyer model instance',
     content: {
       'application/json': {
-        schema: getModelSchemaRef(RaffleBuyer, {includeRelations: true}),
+        schema: getModelSchemaRef(RaffleBuyer, { includeRelations: true }),
       },
     },
   })
   async findById(
     @param.path.string('id') id: string,
-    @param.filter(RaffleBuyer, {exclude: 'where'}) filter?: FilterExcludingWhere<RaffleBuyer>
+    @param.filter(RaffleBuyer, { exclude: 'where' })
+    filter?: FilterExcludingWhere<RaffleBuyer>,
   ): Promise<RaffleBuyer> {
-    return this.raffleBuyerRepository.findById(id, filter);
+    return this.raffleBuyerRepository.findById(id, filter)
   }
 
   @patch('/raffle-buyers/{id}')
@@ -120,13 +121,13 @@ export class RaffeBuyerController {
     @requestBody({
       content: {
         'application/json': {
-          schema: getModelSchemaRef(RaffleBuyer, {partial: true}),
+          schema: getModelSchemaRef(RaffleBuyer, { partial: true }),
         },
       },
     })
     raffleBuyer: RaffleBuyer,
   ): Promise<void> {
-    await this.raffleBuyerRepository.updateById(id, raffleBuyer);
+    await this.raffleBuyerRepository.updateById(id, raffleBuyer)
   }
 
   @put('/raffle-buyers/{id}')
@@ -137,7 +138,7 @@ export class RaffeBuyerController {
     @param.path.string('id') id: string,
     @requestBody() raffleBuyer: RaffleBuyer,
   ): Promise<void> {
-    await this.raffleBuyerRepository.replaceById(id, raffleBuyer);
+    await this.raffleBuyerRepository.replaceById(id, raffleBuyer)
   }
 
   @del('/raffle-buyers/{id}')
@@ -145,6 +146,6 @@ export class RaffeBuyerController {
     description: 'RaffleBuyer DELETE success',
   })
   async deleteById(@param.path.string('id') id: string): Promise<void> {
-    await this.raffleBuyerRepository.deleteById(id);
+    await this.raffleBuyerRepository.deleteById(id)
   }
 }

@@ -5,7 +5,7 @@ import {
   FilterExcludingWhere,
   repository,
   Where,
-} from '@loopback/repository';
+} from '@loopback/repository'
 import {
   post,
   param,
@@ -16,20 +16,20 @@ import {
   del,
   requestBody,
   response,
-} from '@loopback/rest';
-import {Wallet} from '../models';
-import {WalletRepository} from '../repositories';
+} from '@loopback/rest'
+import { Wallet } from '../models'
+import { WalletRepository } from '../repositories'
 
 export class WalletController {
   constructor(
     @repository(WalletRepository)
-    public walletRepository : WalletRepository,
+    public walletRepository: WalletRepository,
   ) {}
 
   @post('/wallets')
   @response(200, {
     description: 'Wallet model instance',
-    content: {'application/json': {schema: getModelSchemaRef(Wallet)}},
+    content: { 'application/json': { schema: getModelSchemaRef(Wallet) } },
   })
   async create(
     @requestBody({
@@ -44,18 +44,16 @@ export class WalletController {
     })
     wallet: Omit<Wallet, 'id'>,
   ): Promise<Wallet> {
-    return this.walletRepository.create(wallet);
+    return this.walletRepository.create(wallet)
   }
 
   @get('/wallets/count')
   @response(200, {
     description: 'Wallet model count',
-    content: {'application/json': {schema: CountSchema}},
+    content: { 'application/json': { schema: CountSchema } },
   })
-  async count(
-    @param.where(Wallet) where?: Where<Wallet>,
-  ): Promise<Count> {
-    return this.walletRepository.count(where);
+  async count(@param.where(Wallet) where?: Where<Wallet>): Promise<Count> {
+    return this.walletRepository.count(where)
   }
 
   @get('/wallets')
@@ -65,34 +63,32 @@ export class WalletController {
       'application/json': {
         schema: {
           type: 'array',
-          items: getModelSchemaRef(Wallet, {includeRelations: true}),
+          items: getModelSchemaRef(Wallet, { includeRelations: true }),
         },
       },
     },
   })
-  async find(
-    @param.filter(Wallet) filter?: Filter<Wallet>,
-  ): Promise<Wallet[]> {
-    return this.walletRepository.find(filter);
+  async find(@param.filter(Wallet) filter?: Filter<Wallet>): Promise<Wallet[]> {
+    return this.walletRepository.find(filter)
   }
 
   @patch('/wallets')
   @response(200, {
     description: 'Wallet PATCH success count',
-    content: {'application/json': {schema: CountSchema}},
+    content: { 'application/json': { schema: CountSchema } },
   })
   async updateAll(
     @requestBody({
       content: {
         'application/json': {
-          schema: getModelSchemaRef(Wallet, {partial: true}),
+          schema: getModelSchemaRef(Wallet, { partial: true }),
         },
       },
     })
     wallet: Wallet,
     @param.where(Wallet) where?: Where<Wallet>,
   ): Promise<Count> {
-    return this.walletRepository.updateAll(wallet, where);
+    return this.walletRepository.updateAll(wallet, where)
   }
 
   @get('/wallets/{id}')
@@ -100,15 +96,16 @@ export class WalletController {
     description: 'Wallet model instance',
     content: {
       'application/json': {
-        schema: getModelSchemaRef(Wallet, {includeRelations: true}),
+        schema: getModelSchemaRef(Wallet, { includeRelations: true }),
       },
     },
   })
   async findById(
     @param.path.string('id') id: string,
-    @param.filter(Wallet, {exclude: 'where'}) filter?: FilterExcludingWhere<Wallet>
+    @param.filter(Wallet, { exclude: 'where' })
+    filter?: FilterExcludingWhere<Wallet>,
   ): Promise<Wallet> {
-    return this.walletRepository.findById(id, filter);
+    return this.walletRepository.findById(id, filter)
   }
 
   @patch('/wallets/{id}')
@@ -120,13 +117,13 @@ export class WalletController {
     @requestBody({
       content: {
         'application/json': {
-          schema: getModelSchemaRef(Wallet, {partial: true}),
+          schema: getModelSchemaRef(Wallet, { partial: true }),
         },
       },
     })
     wallet: Wallet,
   ): Promise<void> {
-    await this.walletRepository.updateById(id, wallet);
+    await this.walletRepository.updateById(id, wallet)
   }
 
   @put('/wallets/{id}')
@@ -137,7 +134,7 @@ export class WalletController {
     @param.path.string('id') id: string,
     @requestBody() wallet: Wallet,
   ): Promise<void> {
-    await this.walletRepository.replaceById(id, wallet);
+    await this.walletRepository.replaceById(id, wallet)
   }
 
   @del('/wallets/{id}')
@@ -145,6 +142,6 @@ export class WalletController {
     description: 'Wallet DELETE success',
   })
   async deleteById(@param.path.string('id') id: string): Promise<void> {
-    await this.walletRepository.deleteById(id);
+    await this.walletRepository.deleteById(id)
   }
 }

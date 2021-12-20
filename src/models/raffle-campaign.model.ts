@@ -1,5 +1,6 @@
-import {Entity, model, property, belongsTo} from '@loopback/repository';
-import {User} from './user.model';
+import { Entity, model, property, belongsTo } from '@loopback/repository'
+import { User } from './user.model'
+import { Influencer } from './influencer.model'
 
 @model()
 export class RaffleCampaign extends Entity {
@@ -8,82 +9,85 @@ export class RaffleCampaign extends Entity {
     id: true,
     generated: true,
   })
-  id?: string;
+  id?: string
 
   @property({
     type: 'string',
   })
-  name?: string;
+  name?: string
 
   @property({
     type: 'string',
   })
-  image?: string;
+  image?: string
 
   @property({
     type: 'string',
   })
-  description?: string;
-
-  @property({
-    type: 'date',
-    required: true,
-  })
-  startAt: string;
-
-  @property({
-    type: 'date',
-    required: true,
-  })
-  endAt: string;
+  description?: string
 
   @property({
     type: 'number',
     required: true,
   })
-  price: number;
+  startAt: string
+
+  @property({
+    type: 'number',
+    required: true,
+  })
+  endAt: string
+
+  @property({
+    type: 'number',
+    required: true,
+  })
+  price: number
 
   @property({
     type: 'string',
     required: true,
   })
-  paymentMethod: string;
+  paymentMethod: string
 
   @property({
     type: 'number',
     required: true,
   })
-  walletQuantity: number;
+  walletQuantity: number
 
   @property({
     type: 'number',
     required: true,
   })
-  totalTicket: number;
+  totalTicket: number
 
   @property({
     type: 'number',
     required: true,
   })
-  numberOfWinners: number;
+  numberOfWinners: number
 
   @property({
     type: 'boolean',
     required: true,
   })
-  status: boolean;
+  status: boolean
 
   @property({
     type: 'boolean',
     required: true,
   })
-  isFeature: boolean;
+  isFeature: boolean
 
   @belongsTo(() => User)
-  userId: string;
+  userId: string
+
+  @belongsTo(() => Influencer)
+  influencerId: string
 
   constructor(data?: Partial<RaffleCampaign>) {
-    super(data);
+    super(data)
   }
 }
 
@@ -91,4 +95,5 @@ export interface RaffleCampaignRelations {
   // describe navigational properties here
 }
 
-export type RaffleCampaignWithRelations = RaffleCampaign & RaffleCampaignRelations;
+export type RaffleCampaignWithRelations = RaffleCampaign &
+  RaffleCampaignRelations

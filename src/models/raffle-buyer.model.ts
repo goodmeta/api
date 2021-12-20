@@ -1,6 +1,6 @@
-import {Entity, model, property, belongsTo} from '@loopback/repository';
-import {User} from './user.model';
-import {RaffleCampaign} from './raffle-campaign.model';
+import { Entity, model, property, belongsTo } from '@loopback/repository'
+import { User } from './user.model'
+import { RaffleCampaign } from './raffle-campaign.model'
 
 @model()
 export class RaffleBuyer extends Entity {
@@ -9,22 +9,22 @@ export class RaffleBuyer extends Entity {
     id: true,
     generated: true,
   })
-  id?: string;
+  id?: string
 
   @property({
     type: 'number',
     required: true,
   })
-  price: number;
+  price: number
 
   @belongsTo(() => User)
-  userId: string;
+  userId: string
 
   @belongsTo(() => RaffleCampaign)
-  raffleCampaignId: string;
+  raffleCampaignId: string
 
   constructor(data?: Partial<RaffleBuyer>) {
-    super(data);
+    super(data)
   }
 }
 
@@ -32,4 +32,4 @@ export interface RaffleBuyerRelations {
   // describe navigational properties here
 }
 
-export type RaffleBuyerWithRelations = RaffleBuyer & RaffleBuyerRelations;
+export type RaffleBuyerWithRelations = RaffleBuyer & RaffleBuyerRelations

@@ -5,7 +5,7 @@ import {
   FilterExcludingWhere,
   repository,
   Where,
-} from '@loopback/repository';
+} from '@loopback/repository'
 import {
   post,
   param,
@@ -16,20 +16,22 @@ import {
   del,
   requestBody,
   response,
-} from '@loopback/rest';
-import {RaffleWinner} from '../models';
-import {RaffleWinnerRepository} from '../repositories';
+} from '@loopback/rest'
+import { RaffleWinner } from '../models'
+import { RaffleWinnerRepository } from '../repositories'
 
 export class RaffeBuyerWinnerController {
   constructor(
     @repository(RaffleWinnerRepository)
-    public raffleWinnerRepository : RaffleWinnerRepository,
+    public raffleWinnerRepository: RaffleWinnerRepository,
   ) {}
 
   @post('/raffle-winners')
   @response(200, {
     description: 'RaffleWinner model instance',
-    content: {'application/json': {schema: getModelSchemaRef(RaffleWinner)}},
+    content: {
+      'application/json': { schema: getModelSchemaRef(RaffleWinner) },
+    },
   })
   async create(
     @requestBody({
@@ -44,18 +46,18 @@ export class RaffeBuyerWinnerController {
     })
     raffleWinner: Omit<RaffleWinner, 'id'>,
   ): Promise<RaffleWinner> {
-    return this.raffleWinnerRepository.create(raffleWinner);
+    return this.raffleWinnerRepository.create(raffleWinner)
   }
 
   @get('/raffle-winners/count')
   @response(200, {
     description: 'RaffleWinner model count',
-    content: {'application/json': {schema: CountSchema}},
+    content: { 'application/json': { schema: CountSchema } },
   })
   async count(
     @param.where(RaffleWinner) where?: Where<RaffleWinner>,
   ): Promise<Count> {
-    return this.raffleWinnerRepository.count(where);
+    return this.raffleWinnerRepository.count(where)
   }
 
   @get('/raffle-winners')
@@ -65,7 +67,7 @@ export class RaffeBuyerWinnerController {
       'application/json': {
         schema: {
           type: 'array',
-          items: getModelSchemaRef(RaffleWinner, {includeRelations: true}),
+          items: getModelSchemaRef(RaffleWinner, { includeRelations: true }),
         },
       },
     },
@@ -73,26 +75,26 @@ export class RaffeBuyerWinnerController {
   async find(
     @param.filter(RaffleWinner) filter?: Filter<RaffleWinner>,
   ): Promise<RaffleWinner[]> {
-    return this.raffleWinnerRepository.find(filter);
+    return this.raffleWinnerRepository.find(filter)
   }
 
   @patch('/raffle-winners')
   @response(200, {
     description: 'RaffleWinner PATCH success count',
-    content: {'application/json': {schema: CountSchema}},
+    content: { 'application/json': { schema: CountSchema } },
   })
   async updateAll(
     @requestBody({
       content: {
         'application/json': {
-          schema: getModelSchemaRef(RaffleWinner, {partial: true}),
+          schema: getModelSchemaRef(RaffleWinner, { partial: true }),
         },
       },
     })
     raffleWinner: RaffleWinner,
     @param.where(RaffleWinner) where?: Where<RaffleWinner>,
   ): Promise<Count> {
-    return this.raffleWinnerRepository.updateAll(raffleWinner, where);
+    return this.raffleWinnerRepository.updateAll(raffleWinner, where)
   }
 
   @get('/raffle-winners/{id}')
@@ -100,15 +102,16 @@ export class RaffeBuyerWinnerController {
     description: 'RaffleWinner model instance',
     content: {
       'application/json': {
-        schema: getModelSchemaRef(RaffleWinner, {includeRelations: true}),
+        schema: getModelSchemaRef(RaffleWinner, { includeRelations: true }),
       },
     },
   })
   async findById(
     @param.path.string('id') id: string,
-    @param.filter(RaffleWinner, {exclude: 'where'}) filter?: FilterExcludingWhere<RaffleWinner>
+    @param.filter(RaffleWinner, { exclude: 'where' })
+    filter?: FilterExcludingWhere<RaffleWinner>,
   ): Promise<RaffleWinner> {
-    return this.raffleWinnerRepository.findById(id, filter);
+    return this.raffleWinnerRepository.findById(id, filter)
   }
 
   @patch('/raffle-winners/{id}')
@@ -120,13 +123,13 @@ export class RaffeBuyerWinnerController {
     @requestBody({
       content: {
         'application/json': {
-          schema: getModelSchemaRef(RaffleWinner, {partial: true}),
+          schema: getModelSchemaRef(RaffleWinner, { partial: true }),
         },
       },
     })
     raffleWinner: RaffleWinner,
   ): Promise<void> {
-    await this.raffleWinnerRepository.updateById(id, raffleWinner);
+    await this.raffleWinnerRepository.updateById(id, raffleWinner)
   }
 
   @put('/raffle-winners/{id}')
@@ -137,7 +140,7 @@ export class RaffeBuyerWinnerController {
     @param.path.string('id') id: string,
     @requestBody() raffleWinner: RaffleWinner,
   ): Promise<void> {
-    await this.raffleWinnerRepository.replaceById(id, raffleWinner);
+    await this.raffleWinnerRepository.replaceById(id, raffleWinner)
   }
 
   @del('/raffle-winners/{id}')
@@ -145,6 +148,6 @@ export class RaffeBuyerWinnerController {
     description: 'RaffleWinner DELETE success',
   })
   async deleteById(@param.path.string('id') id: string): Promise<void> {
-    await this.raffleWinnerRepository.deleteById(id);
+    await this.raffleWinnerRepository.deleteById(id)
   }
 }

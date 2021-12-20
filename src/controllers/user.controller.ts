@@ -1,3 +1,6 @@
+import { TokenService, UserService } from '@loopback/authentication'
+import { TokenServiceBindings } from '@loopback/authentication-jwt'
+import { inject } from '@loopback/core'
 import {
   Count,
   CountSchema,
@@ -5,57 +8,89 @@ import {
   FilterExcludingWhere,
   repository,
   Where,
-} from '@loopback/repository';
+} from '@loopback/repository'
 import {
-  post,
-  param,
+  del,
   get,
   getModelSchemaRef,
+  HttpErrors,
+  param,
   patch,
+  post,
   put,
-  del,
   requestBody,
   response,
-} from '@loopback/rest';
-import {User} from '../models';
-import {UserRepository} from '../repositories';
+} from '@loopback/rest'
+import _ from 'lodash'
+import { PasswordHasherBindings, UserServiceBindings } from '../keys'
+import { User, UserWithPassword } from '../models'
+import {
+  Credentials,
+  UserRepository,
+  UserResetCredentialRepository,
+} from '../repositories'
+import {
+  PasswordHasher,
+  validateCredentials,
+  VelvetUserService,
+} from '../services'
 
 export class UserController {
   constructor(
     @repository(UserRepository)
-    public userRepository : UserRepository,
+    public userRepository: UserRepository,
+    @inject(TokenServiceBindings.TOKEN_SERVICE)
+    public jwtService: TokenService,
+    @inject(PasswordHasherBindings.PASSWORD_HASHER)
+    public passwordHasher: PasswordHasher,
+    @repository(UserResetCredentialRepository)
+    public userResetCredentialRepository: UserResetCredentialRepository,
+    @inject(UserServiceBindings.USER_SERVICE)
+    public userService: UserService<User, Credentials>,
+    @inject('services.VelvetUserService')
+    public velvetUserService: VelvetUserService,
   ) {}
 
   @post('/users')
   @response(200, {
     description: 'User model instance',
-    content: {'application/json': {schema: getModelSchemaRef(User)}},
+    content: { 'application/json': { schema: getModelSchemaRef(User) } },
   })
   async create(
     @requestBody({
       content: {
         'application/json': {
-          schema: getModelSchemaRef(User, {
+          schema: getModelSchemaRef(UserWithPassword, {
             title: 'NewUser',
             exclude: ['id'],
           }),
         },
       },
     })
-    user: Omit<User, 'id'>,
+    user: UserWithPassword,
   ): Promise<User> {
-    return this.userRepository.create(user);
+    // ensure a valid email value and password value
+    validateCredentials(_.pick(user, ['email', 'password']))
+
+    try {
+      return await this.velvetUserService.createUser(user)
+    } catch (error) {
+      // MongoError 11000 duplicate key
+      if (error.code === 11000 && error.errmsg.includes('index: uniqueEmail')) {
+        throw new HttpErrors.Conflict('Email value is already taken')
+      } else {
+        throw error
+      }
+    }
   }
 
   @get('/users/count')
   @response(200, {
     description: 'User model count',
-    content: {'application/json': {schema: CountSchema}},
+    content: { 'application/json': { schema: CountSchema } },
   })
-  async count(
-    @param.where(User) where?: Where<User>,
-  ): Promise<Count> {
-    return this.userRepository.count(where);
+  async count(@param.where(User) where?: Where<User>): Promise<Count> {
+    return this.userRepository.count(where)
   }
 
   @get('/users')
@@ -65,34 +100,32 @@ export class UserController {
       'application/json': {
         schema: {
           type: 'array',
-          items: getModelSchemaRef(User, {includeRelations: true}),
+          items: getModelSchemaRef(User, { includeRelations: true }),
         },
       },
     },
   })
-  async find(
-    @param.filter(User) filter?: Filter<User>,
-  ): Promise<User[]> {
-    return this.userRepository.find(filter);
+  async find(@param.filter(User) filter?: Filter<User>): Promise<User[]> {
+    return this.userRepository.find(filter)
   }
 
   @patch('/users')
   @response(200, {
     description: 'User PATCH success count',
-    content: {'application/json': {schema: CountSchema}},
+    content: { 'application/json': { schema: CountSchema } },
   })
   async updateAll(
     @requestBody({
       content: {
         'application/json': {
-          schema: getModelSchemaRef(User, {partial: true}),
+          schema: getModelSchemaRef(User, { partial: true }),
         },
       },
     })
     user: User,
     @param.where(User) where?: Where<User>,
   ): Promise<Count> {
-    return this.userRepository.updateAll(user, where);
+    return this.userRepository.updateAll(user, where)
   }
 
   @get('/users/{id}')
@@ -100,15 +133,16 @@ export class UserController {
     description: 'User model instance',
     content: {
       'application/json': {
-        schema: getModelSchemaRef(User, {includeRelations: true}),
+        schema: getModelSchemaRef(User, { includeRelations: true }),
       },
     },
   })
   async findById(
     @param.path.string('id') id: string,
-    @param.filter(User, {exclude: 'where'}) filter?: FilterExcludingWhere<User>
+    @param.filter(User, { exclude: 'where' })
+    filter?: FilterExcludingWhere<User>,
   ): Promise<User> {
-    return this.userRepository.findById(id, filter);
+    return this.userRepository.findById(id, filter)
   }
 
   @patch('/users/{id}')
@@ -120,13 +154,13 @@ export class UserController {
     @requestBody({
       content: {
         'application/json': {
-          schema: getModelSchemaRef(User, {partial: true}),
+          schema: getModelSchemaRef(User, { partial: true }),
         },
       },
     })
     user: User,
   ): Promise<void> {
-    await this.userRepository.updateById(id, user);
+    await this.userRepository.updateById(id, user)
   }
 
   @put('/users/{id}')
@@ -137,7 +171,7 @@ export class UserController {
     @param.path.string('id') id: string,
     @requestBody() user: User,
   ): Promise<void> {
-    await this.userRepository.replaceById(id, user);
+    await this.userRepository.replaceById(id, user)
   }
 
   @del('/users/{id}')
@@ -145,6 +179,6 @@ export class UserController {
     description: 'User DELETE success',
   })
   async deleteById(@param.path.string('id') id: string): Promise<void> {
-    await this.userRepository.deleteById(id);
+    await this.userRepository.deleteById(id)
   }
 }

@@ -1,4 +1,4 @@
-import {Entity, model, property} from '@loopback/repository';
+import { Entity, model, property } from '@loopback/repository'
 
 @model()
 export class Influencer extends Entity {
@@ -7,58 +7,57 @@ export class Influencer extends Entity {
     id: true,
     generated: true,
   })
-  id?: string;
+  id?: string
 
   @property({
     type: 'string',
     required: true,
   })
-  name: string;
+  name: string
 
   @property({
     type: 'string',
     required: true,
   })
-  image: string;
+  image: string
 
   @property({
     type: 'string',
   })
-  website?: string;
+  website?: string
 
   @property({
     type: 'string',
   })
-  twitter?: string;
+  twitter?: string
 
   @property({
     type: 'string',
   })
-  instagram?: string;
+  instagram?: string
 
   @property({
     type: 'string',
   })
-  facebook?: string;
+  facebook?: string
 
   @property({
     type: 'string',
   })
-  tiktok?: string;
+  tiktok?: string
 
   @property({
     type: 'string',
   })
-  telegram?: string;
+  telegram?: string
 
   @property({
     type: 'string',
   })
-  youtube?: string;
-
+  youtube?: string
 
   constructor(data?: Partial<Influencer>) {
-    super(data);
+    super(data)
   }
 }
 
@@ -66,4 +65,4 @@ export interface InfluencerRelations {
   // describe navigational properties here
 }
 
-export type InfluencerWithRelations = Influencer & InfluencerRelations;
+export type InfluencerWithRelations = Influencer & InfluencerRelations
